@@ -809,6 +809,7 @@ namespace MediaBrowser.MediaEncoding.Encoder
             int? threads,
             int? qualityScale,
             ProcessPriorityClass? priority,
+            bool enableKeyFrameOnlyExtraction,
             EncodingHelper encodingHelper,
             CancellationToken cancellationToken)
         {
@@ -846,6 +847,11 @@ namespace MediaBrowser.MediaEncoding.Encoder
             if (!allowHwAccel)
             {
                 inputArg = "-threads " + threads + " " + inputArg; // HW accel args set a different input thread count, only set if disabled
+            }
+
+            if (enableKeyFrameOnlyExtraction)
+            {
+                inputArg = "-skip_frame nokey " + inputArg;
             }
 
             var filterParam = encodingHelper.GetVideoProcessingFilterParam(jobState, options, vidEncoder).Trim();
